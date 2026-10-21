@@ -1,97 +1,111 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Bajaj Pulsar N160 (2025 USD Edition) — Bike Mileage Calculator 🏍️⛽
 
-# Getting Started
+A specialized Android CLI React Native application designed for the **Bajaj Pulsar N160 (2025 USD Edition)**. It tracks refueling logs based on the motorcycle's digital odometer readings and automatically computes fuel efficiency (km/L), trip distance, running cost per kilometer, and safe riding range.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+---
 
-## Step 1: Start Metro
+## 🚀 Key Features
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+### 1. **Odometer-Based Fuel Efficiency Tracking**
+- Record odometer reading (`KM`), petrol filled (`L`), price per liter (`₹/L`), and total amount.
+- **Tank-to-Tank Calculation Method**: Automatically calculates trip distance between consecutive fills (`Current ODO - Previous ODO`) and fuel efficiency (`Trip Distance / Fuel Added`).
+- **Running Cost Analysis**: Calculates cost-per-kilometer (`₹ / KM`) for each trip and overall lifetime average.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### 2. **Digital Console Speedometer HUD**
+- Negative-LCD styled digital odometer display inspired by the Pulsar N160's digital instrument cluster.
+- Semi-circular speedometer efficiency gauge color-coded with dynamic status badges:
+  - 🟢 **Exceptional (50+ km/L)**: Highway / Eco riding mode.
+  - 🔵 **Optimal (44 - 50 km/L)**: Ideal city and daily commute performance.
+  - 🟡 **Moderate (38 - 44 km/L)**: Aggressive riding or heavy traffic.
+  - 🔴 **Needs Attention (<38 km/L)**: Warning to check tyre pressure or chain lubrication.
 
-```sh
-# Using npm
-npm start
+### 3. **Smart Refueling Input Modal**
+- **Dual-Way Auto-Calculation**: Enter Liters to auto-fill the total amount, or enter total amount (`₹500`) to auto-compute liters based on the current petrol rate.
+- **Quick Fill Presets**: Quick tap buttons for `₹200`, `₹500`, `₹1,000`, and `Full Tank`.
+- **Live Preview Box**: Shows instantaneous trip distance (`+250 KM`), projected mileage (`49.0 km/L`), and trip cost before saving.
+- Odometer sanity check prevents accidental entries lower than previous readings.
 
-# OR using Yarn
-yarn start
+### 4. **N160 14-Liter Tank Range Estimator**
+- Visual fuel tank bar highlighting the **2.5 Liter Reserve Zone** and **14.0 Liter Total Capacity**.
+- Instant range calculation: select fuel remaining (Reserve 2.5L, Half Tank 7L, Full Tank 14L) to see how far the N160 can travel on current real-world mileage.
+
+### 5. **Motorcycle Technical Specs & Maintenance Tips**
+- Embedded technical specs sheet for the 2025 USD edition:
+  - 33mm Gold Inverted (USD) Front Forks
+  - 164.82 cc Oil-Cooled Single-Cylinder Engine (16 PS / 14.65 Nm)
+  - Dual-Channel ABS (300mm front / 230mm rear disc)
+  - 14.0L Fuel Tank (2.5L reserve)
+  - Recommended tyre pressure (28 PSI front / 32 PSI rear)
+- 1-Tap **Reload Demo Data** and **Clear All Data** options.
+
+### 6. **Offline Persistent Storage**
+- Uses `@react-native-async-storage/async-storage` to securely retain all refuel records and last petrol rate offline on device.
+
+---
+
+## 🛠️ Project Structure
+
+```
+N160MileageApp/
+├── App.tsx                     # Root App container with SafeAreaProvider
+├── index.js                    # React Native app registration
+├── package.json                # Dependencies and CLI scripts
+├── jest.setup.js               # Jest mock setup
+├── src/
+│   ├── types/
+│   │   └── index.ts            # RefuelEntry, SummaryStats, BikeProfile interfaces
+│   ├── constants/
+│   │   └── bike.ts             # N160 USD 2025 specs, UI theme, realistic demo logs
+│   ├── utils/
+│   │   ├── calculations.ts     # Mileage, trip, cost/km, and health status engine
+│   │   └── storage.ts          # AsyncStorage persistence helper
+│   ├── components/
+│   │   ├── Header.tsx          # Digital console HUD & bike branding
+│   │   ├── MileageGauge.tsx    # Semi-circle SVG speedometer gauge
+│   │   ├── MetricCard.tsx      # 4-card key performance metrics grid
+│   │   ├── RangeEstimator.tsx  # 14L tank visualizer and range projector
+│   │   ├── RefuelCard.tsx      # Refueling log card with delete action
+│   │   ├── RefuelModal.tsx     # Smart add-refuel form with instant preview
+│   │   └── BikeSpecsModal.tsx  # N160 2025 USD specifications sheet
+│   └── screens/
+│       └── DashboardScreen.tsx # Main dashboard orchestrator
+└── __tests__/
+    ├── calculations.test.ts    # Unit test suite for mileage calculations
+    └── App.test.tsx            # Snapshot and rendering test
 ```
 
-## Step 2: Build and run your app
+---
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+## 📲 How to Run on Android
 
-### Android
+### Prerequisites
+- Node.js (v20+)
+- Android SDK installed (`$ANDROID_HOME` configured)
+- Connected Android device with USB Debugging enabled, or an Android Emulator running.
 
-```sh
-# Using npm
-npm run android
+### Quick Start Commands
 
-# OR using Yarn
-yarn android
+1. **Navigate to the project directory**:
+   ```bash
+   cd N160MileageApp
+   ```
+
+2. **Start the Metro bundler**:
+   ```bash
+   npx react-native start
+   ```
+
+3. **Build and install on Android**:
+   ```bash
+   npx react-native run-android
+   ```
+
+### Running Automated Tests
+To run unit and calculation test suites:
+```bash
+npm test
 ```
-
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
+To run TypeScript type checks:
+```bash
+npx tsc --noEmit
 ```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
